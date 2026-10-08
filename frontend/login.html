@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>EduPulse AI - Login</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(
+                135deg,
+                #eef2ff,
+                #f8fafc
+            );
+
+            min-height: 100vh;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-container {
+            width: 400px;
+            background: white;
+            padding: 35px;
+            border-radius: 15px;
+
+            box-shadow:
+                0 10px 30px rgba(0,0,0,0.12);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .logo h1 {
+            margin: 0;
+            font-size: 32px;
+            color: #2563eb;
+        }
+
+        .logo p {
+            margin-top: 8px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+
+            font-size: 15px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 25px;
+            padding: 13px;
+
+            border: none;
+            border-radius: 8px;
+
+            background: #2563eb;
+            color: white;
+
+            font-size: 16px;
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        #error {
+            margin-top: 15px;
+            text-align: center;
+            color: #dc2626;
+            font-size: 14px;
+        }
+
+        .demo {
+            margin-top: 25px;
+            padding: 12px;
+
+            background: #f8fafc;
+            border-radius: 8px;
+
+            font-size: 12px;
+            color: #555;
+        }
+
+        .demo strong {
+            color: #111827;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <div class="login-container">
+
+        <div class="logo">
+
+            <h1>EduPulse AI</h1>
+
+            <p>
+                Predict. Explain. Intervene. Improve.
+            </p>
+
+        </div>
+
+
+        <form onsubmit="login(event)">
+
+            <label>
+                Username
+            </label>
+
+            <input
+                type="text"
+                id="username"
+                placeholder="Enter username"
+                required
+            >
+
+
+            <label>
+                Password
+            </label>
+
+            <input
+                type="password"
+                id="password"
+                placeholder="Enter password"
+                required
+            >
+
+
+            <button type="submit">
+                Login
+            </button>
+
+        </form>
+
+
+        <div id="error"></div>
+
+
+        <div class="demo">
+
+            <strong>Demo Accounts</strong>
+
+            <br><br>
+
+            Student:
+            student010 / student123
+
+            <br>
+
+            Management:
+            manager01 / manager123
+
+            <br>
+
+            Admin:
+            admin01 / admin123
+
+        </div>
+
+    </div>
+
+
+<script>
+
+const API =
+    (window.location.hostname === "127.0.0.1" ||
+     window.location.hostname === "localhost")
+        ? "http://127.0.0.1:5000"
+        : "";
+
+
+async function login(event) {
+
+    event.preventDefault();
+
+
+    const username =
+        document.getElementById("username").value;
+
+    const password =
+        document.getElementById("password").value;
+
+
+    const error =
+        document.getElementById("error");
+
+
+    error.innerText = "";
+
+
+    try {
+
+        const response = await fetch(
+            `${API}/api/login`,
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+                credentials: "include",
+
+                body: JSON.stringify({
+                    username: username,
+                    password: password
+                })
+            }
+        );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            error.innerText =
+                data.error ||
+                "Login failed";
+
+            return;
+        }
+
+
+        /*
+         * Store login information
+         * for the next page.
+         */
+
+        localStorage.setItem(
+            "username",
+            data.username
+        );
+
+        localStorage.setItem(
+            "role",
+            data.role
+        );
+
+        localStorage.setItem(
+            "student_id",
+            data.student_id || ""
+        );
+
+
+        /*
+         * Temporary routing.
+         * We will create the proper
+         * role-based dashboards next.
+         */
+
+        if (data.role === "student") {
+
+            window.location.href =
+                "student.html";
+
+        }
+        else if (
+            data.role === "management"
+        ) {
+
+            window.location.href =
+                "index.html";
+
+        }
+        else if (data.role === "admin") {
+
+            window.location.href =
+                "index.html";
+
+        }
+
+    }
+    catch (err) {
+
+        error.innerText =
+            "Cannot connect to server.";
+
+        console.error(err);
+
+    }
+
+}
+
+</script>
+
+</body>
+
+</html>

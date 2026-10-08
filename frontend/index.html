@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>EduPulse AI | Student Success Intelligence</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+
+    const role = localStorage.getItem("role");
+
+    if (role !== "management" && role !== "admin") {
+        window.location.href = "login.html";
+    }
+
+    // your existing dashboard JavaScript continues here
+
+</script>
+
+    <style>
+        /* Student 360° Modal */
+.student-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.student-modal-content {
+    background: white;
+    width: 70%;
+    max-width: 800px;
+    margin: 5% auto;
+    padding: 30px;
+    border-radius: 15px;
+    position: relative;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.student-modal-content h2 {
+    margin-top: 0;
+}
+
+.close-modal {
+    position: absolute;
+    right: 18px;
+    top: 15px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.close-modal:hover {
+    transform: scale(1.1);
+    opacity: 0.7;
+}
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        .header {
+            background: #111827;
+            color: white;
+            padding: 22px 35px;
+        }
+        /* Professional EduPulse AI Header */
+.header {
+    text-align: center;
+    padding: 35px 20px;
+    margin-bottom: 30px;
+    border-radius: 16px;
+}
+
+.header h1 {
+    font-size: 38px;
+    margin: 0 0 8px 0;
+    font-weight: 700;
+}
+
+.header p {
+    font-size: 17px;
+    margin: 0;
+    opacity: 0.85;
+    letter-spacing: 0.5px;
+}
+        .header h1 {
+            font-size: 28px;
+        }
+
+        .header p {
+            margin-top: 6px;
+            color: #cbd5e1;
+        }
+        .header {
+    position: relative;
+    text-align: center;
+    padding: 35px 20px;
+    margin-bottom: 30px;
+    border-radius: 16px;
+}
+
+.header-content h1 {
+    font-size: 38px;
+    margin: 0 0 8px 0;
+    font-weight: 700;
+}
+
+.header-content p {
+    font-size: 17px;
+    margin: 0;
+    opacity: 0.85;
+    letter-spacing: 0.5px;
+}
+
+.logout-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 9px 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.logout-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+        /* Professional Summary Cards */
+.cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.card {
+    padding: 24px;
+    border-radius: 14px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+}
+
+.card h3 {
+    margin: 0 0 12px 0;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.card .number {
+    font-size: 30px;
+    font-weight: 700;
+}
+        .container {
+            padding: 30px;
+            max-width: 1400px;
+            margin: auto;
+        }
+/* Professional Chart Panels */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.panel {
+    padding: 24px;
+    border-radius: 14px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.panel h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 19px;
+    font-weight: 600;
+}
+
+.panel canvas {
+    max-height: 320px;
+}
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+/* Professional Student Table */
+.table-container {
+    overflow-x: auto;
+    margin-top: 15px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    padding: 14px 12px;
+    text-align: left;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+td {
+    padding: 13px 12px;
+    font-size: 14px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+tr:hover {
+    background: rgba(0, 0, 0, 0.03);
+}
+
+.student-id {
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.view-btn {
+    padding: 7px 12px;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+}
+/* Placement-Unprepared Section */
+.placement-section {
+    margin-top: 30px;
+}
+
+.placement-section h2 {
+    margin-bottom: 18px;
+    font-size: 21px;
+    font-weight: 600;
+}
+
+.placement-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.placement-card {
+    padding: 18px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.placement-card h3 {
+    margin: 0 0 8px 0;
+    font-size: 16px;
+}
+
+.placement-card p {
+    margin: 5px 0;
+    font-size: 14px;
+}
+/* Responsive Dashboard */
+@media (max-width: 900px) {
+
+    .cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .placement-list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .student-modal-content {
+        width: 85%;
+    }
+}
+
+@media (max-width: 600px) {
+
+    .cards {
+        grid-template-columns: 1fr;
+    }
+
+    .placement-list {
+        grid-template-columns: 1fr;
+    }
+
+    .header h1 {
+        font-size: 30px;
+    }
+
+    .header p {
+        font-size: 14px;
+    }
+
+    .student-modal-content {
+        width: 90%;
+        padding: 20px;
+    }
+}
+        .card {
+            background: white;
+            padding: 22px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+        }
+        /* Risk Level Badges */
+.risk {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.risk.low {
+    background: rgba(34, 197, 94, 0.15);
+    color: #15803d;
+}
+
+.risk.medium {
+    background: rgba(234, 179, 8, 0.18);
+    color: #a16207;
+}
+
+.risk.high {
+    background: rgba(239, 68, 68, 0.15);
+    color: #b91c1c;
+}
+
+        .card h3 {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 10px;
+        }
+
+        .card .number {
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        .panel {
+            background: white;
+            padding: 22px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+        }
+
+        .panel h2 {
+            font-size: 19px;
+            margin-bottom: 18px;
+        }
+
+        canvas {
+            max-height: 300px;
+        }
+
+        .search-box {
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 14px;
+        }
+
+        th {
+            background: #f8fafc;
+        }
+
+        .risk {
+            padding: 5px 9px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .medium {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .high {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .low {
+            background: #dcfce7;
+            color: #166534;
+        }
+        /* Professional Logout Button */
+.logout-btn {
+    margin-top: 18px;
+    padding: 10px 22px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.logout-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.logout-btn:active {
+    transform: translateY(0);
+}
+
+        .placement-panel {
+            margin-bottom: 25px;
+            border-left: 5px solid #7c3aed;
+        }
+
+        .placement-panel p {
+            margin: 8px 0;
+            color: #475569;
+        }
+
+        .student-id {
+            color: #2563eb;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        /* Search and Filter Controls */
+.search-box {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.search-box input,
+.search-box select {
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    outline: none;
+}
+
+.search-box input {
+    min-width: 260px;
+    flex: 1;
+}
+
+.search-box input:focus,
+.search-box select:focus {
+    border-color: #888;
+}
+
+.clear-filter-btn {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.clear-filter-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+}
+/* Student 360° Profile Styling */
+#studentProfile {
+    margin-top: 20px;
+}
+
+#studentProfile h3 {
+    margin-top: 18px;
+    margin-bottom: 8px;
+}
+
+#studentProfile p {
+    line-height: 1.6;
+    margin-bottom: 12px;
+}
+
+#studentProfile hr {
+    margin: 20px 0;
+    border: none;
+    border-top: 1px solid #ddd;
+}
+
+.close-modal:hover {
+    opacity: 0.7;
+}
+        @media(max-width: 900px) {
+            .cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media(max-width: 600px) {
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="header">
+    <div class="header-content">
+        <h1>EduPulse AI</h1>
+        <p>Predict. Explain. Intervene. Improve.</p>
+    </div>
+
+    <button onclick="logout()" class="logout-btn">
+        Logout
+    </button>
+</header>
+
+
+<div class="container">
+
+    <!-- SUMMARY CARDS -->
+
+    <div class="cards">
+
+        <div class="card">
+            <h3>Total Students</h3>
+            <div class="number" id="totalStudents">-</div>
+        </div>
+
+        <div class="card">
+            <h3>Average Success Score</h3>
+            <div class="number" id="averageScore">-</div>
+        </div>
+
+        <div class="card">
+            <h3>Medium Risk Students</h3>
+            <div class="number" id="mediumRisk">-</div>
+        </div>
+
+        <div class="card">
+            <h3>Placement-Unprepared</h3>
+            <div class="number" id="placementUnprepared">-</div>
+        </div>
+
+    </div>
+
+
+    <!-- CHARTS -->
+
+    <div class="dashboard-grid">
+
+        <div class="panel">
+            <h2>Risk Distribution</h2>
+            <canvas id="riskChart"></canvas>
+        </div>
+
+        <div class="panel">
+            <h2>Student Segmentation</h2>
+            <canvas id="segmentChart"></canvas>
+        </div>
+
+    </div>
+
+
+    <!-- SPECIAL DEMO FEATURE -->
+
+    <div class="panel placement-panel">
+
+        <h2>🎯 Academic Strong / Placement Unprepared</h2>
+
+        <p>
+            Students demonstrating strong academic performance
+            but requiring targeted placement-readiness intervention.
+        </p>
+
+        <div id="placementStudents">
+            Loading...
+        </div>
+
+    </div>
+
+
+    <!-- STUDENT TABLE -->
+
+    <div class="panel">
+
+        <h2>Student Success Monitoring</h2>
+        <p style="color:#666; margin-top:-10px; margin-bottom:15px;">
+    Monitor student success scores, identify risk levels, and take targeted intervention actions.
+</p>
+
+        <div class="search-box">
+             <input
+        type="text"
+        id="searchInput"
+        placeholder="Search by Student ID or Name..."
+        onkeyup="searchStudents()"
+    >
+
+    <select
+        id="riskFilter"
+        onchange="searchStudents()"
+    >
+        <option value="">All Risk Levels</option>
+        <option value="Low Risk">Low Risk</option>
+        <option value="Medium Risk">Medium Risk</option>
+        <option value="High Risk">High Risk</option>
+    </select>
+    <select
+    id="departmentFilter"
+    onchange="searchStudents()"
+>
+    <option value="">All Departments</option>
+</select>
+<button
+    type="button"
+    onclick="clearStudentFilters()"
+    class="clear-filter-btn"
+>
+    Clear Filters
+</button>
+        </div>
+
+        <div style="overflow-x:auto;">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Student</th>
+                        <th>Department</th>
+                        <th>CGPA</th>
+                        <th>Success Score</th>
+                        <th>Risk</th>
+                        <th>Primary Risk</th>
+                        <th>Segment</th>
+                        <th>Action</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="studentTable">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+const API =
+    (window.location.hostname === "127.0.0.1" ||
+     window.location.hostname === "localhost")
+        ? "http://127.0.0.1:5000"
+        : "";
+
+let students = [];
+
+
+// --------------------------------------------------
+// LOAD DASHBOARD SUMMARY
+// --------------------------------------------------
+
+async function loadSummary() {
+
+    const response = await fetch(
+        `${API}/api/summary`,
+        {
+            credentials: "include"
+        }
+    );
+
+    const data = await response.json();
+
+    document.getElementById(
+        "totalStudents"
+    ).textContent = data.total_students;
+
+    document.getElementById(
+        "averageScore"
+    ).textContent = data.average_success_score;
+
+    document.getElementById(
+        "mediumRisk"
+    ).textContent =
+        data.risk_levels["Medium Risk"] || 0;
+
+
+    createRiskChart(data.risk_levels);
+
+    createSegmentChart(data.segments);
+}
+
+
+// --------------------------------------------------
+// RISK CHART
+// --------------------------------------------------
+
+function createRiskChart(data) {
+
+    new Chart(
+        document.getElementById("riskChart"),
+        {
+            type: "doughnut",
+
+            data: {
+                labels: Object.keys(data),
+
+                datasets: [{
+                    data: Object.values(data)
+                }]
+            },
+
+            options: {
+                responsive: true
+            }
+        }
+    );
+}
+
+
+// --------------------------------------------------
+// SEGMENT CHART
+// --------------------------------------------------
+
+function createSegmentChart(data) {
+
+    new Chart(
+        document.getElementById("segmentChart"),
+        {
+            type: "bar",
+
+            data: {
+                labels: Object.keys(data),
+
+                datasets: [{
+                    label: "Students",
+                    data: Object.values(data)
+                }]
+            },
+
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        }
+    );
+}
+
+
+// --------------------------------------------------
+// LOAD STUDENTS
+// --------------------------------------------------
+
+async function loadStudents() {
+
+    const response = await fetch(
+        `${API}/api/students`,
+        {
+            credentials: "include"
+        }
+    );
+
+    students = await response.json();
+
+    populateDepartmentFilter();
+
+    displayStudents(students);
+}
+function populateDepartmentFilter() {
+
+    const departmentFilter =
+        document.getElementById("departmentFilter");
+
+    const departments = [
+        ...new Set(
+            students.map(student => student.department)
+        )
+    ].sort();
+
+    departments.forEach(department => {
+
+        const option = document.createElement("option");
+
+        option.value = department;
+        option.textContent = department;
+
+        departmentFilter.appendChild(option);
+    });
+}
+
+
+// --------------------------------------------------
+// DISPLAY STUDENTS
+// --------------------------------------------------
+
+function displayStudents(data) {
+
+    const table =
+        document.getElementById("studentTable");
+
+    table.innerHTML = "";
+
+    data.forEach(student => {
+
+        let riskClass = "low";
+
+        if (
+            student.overall_risk_level ===
+            "Medium Risk"
+        ) {
+            riskClass = "medium";
+        }
+
+        if (
+            student.overall_risk_level ===
+            "High Risk"
+        ) {
+            riskClass = "high";
+        }
+
+
+        table.innerHTML += `
+
+            <tr>
+
+                <td>
+                    <a
+    href="javascript:void(0)"
+    class="student-id"
+    onclick="showStudent('${student.student_id}')"
+>
+    ${student.student_id}
+</a>
+                    <br>
+                    ${student.name}
+                </td>
+
+                <td>
+                    ${student.department}
+                </td>
+
+                <td>
+                    ${student.cgpa.toFixed(2)}
+                </td>
+
+                <td>
+                    ${student.success_score.toFixed(2)}
+                </td>
+
+                <td>
+                    <span class="risk ${riskClass}">
+                        ${student.overall_risk_level}
+                    </span>
+                </td>
+
+                <td>
+                    ${student.primary_risk_type}
+                </td>
+
+                <td>
+                    ${student.student_segment}
+                </td>
+                <td>
+    <button
+        onclick="showStudent('${student.student_id}')"
+        class="view-btn"
+    >
+        View Profile
+    </button>
+</td>
+
+            </tr>
+
+        `;
+
+    });
+}
+
+
+// --------------------------------------------------
+// SEARCH
+// --------------------------------------------------
+
+function searchStudents() {
+
+    const query =
+        document.getElementById("searchInput")
+            .value
+            .toLowerCase();
+
+    const riskFilter =
+        document.getElementById("riskFilter")
+            .value;
+
+    const departmentFilter =
+        document.getElementById("departmentFilter")
+            .value;
+
+    const filtered = students.filter(student => {
+
+        const matchesSearch =
+            student.student_id
+                .toLowerCase()
+                .includes(query) ||
+
+            student.name
+                .toLowerCase()
+                .includes(query);
+
+        const matchesRisk =
+            riskFilter === "" ||
+            student.overall_risk_level === riskFilter;
+
+        const matchesDepartment =
+            departmentFilter === "" ||
+            student.department === departmentFilter;
+
+        return (
+            matchesSearch &&
+            matchesRisk &&
+            matchesDepartment
+        );
+    });
+
+    displayStudents(filtered);
+}
+function clearStudentFilters() {
+
+    document.getElementById("searchInput").value = "";
+    document.getElementById("riskFilter").value = "";
+    document.getElementById("departmentFilter").value = "";
+
+    displayStudents(students);
+}
+
+
+// --------------------------------------------------
+// PLACEMENT-UNPREPARED STUDENTS
+// --------------------------------------------------
+
+async function loadPlacementUnprepared() {
+
+    const response = await fetch(
+        `${API}/api/placement-unprepared`,
+        {
+            credentials: "include"
+        }
+    );
+
+    const data = await response.json();
+
+    document.getElementById(
+        "placementUnprepared"
+    ).textContent = data.length;
+
+
+    const container =
+        document.getElementById(
+            "placementStudents"
+        );
+
+    if (data.length === 0) {
+
+        container.innerHTML =
+            "<p>No students found.</p>";
+
+        return;
+    }
+
+
+    let html = "<table>";
+
+    html += `
+        <tr>
+            <th>Student</th>
+            <th>CGPA</th>
+            <th>Placement Score</th>
+            <th>Success Score</th>
+            <th>Recommended Intervention</th>
+        </tr>
+    `;
+
+
+    data.slice(0, 10).forEach(student => {
+
+        html += `
+
+            <tr>
+
+                <td>
+                    <a href="#" onclick="showStudent('${student.student_id}'); return false;">
+        <b>${student.student_id}</b>
+    </a>
+    <br>
+    ${student.name}
+                </td>
+
+                <td>
+                    ${Number(student.cgpa).toFixed(2)}
+                </td>
+
+                <td>
+                    ${Number(
+                        student.placement_score
+                    ).toFixed(1)}
+                </td>
+
+                <td>
+                    ${Number(
+                        student.success_score
+                    ).toFixed(1)}
+                </td>
+
+                <td>
+                    ${student.intervention_recommendations}
+                </td>
+
+            </tr>
+
+        `;
+
+    });
+
+
+    html += "</table>";
+
+    container.innerHTML = html;
+}
+
+
+// --------------------------------------------------
+// STUDENT DETAILS
+// --------------------------------------------------
+
+async function showStudent(studentId) {
+
+    studentId = studentId.trim();
+
+    const response = await fetch(
+        `${API}/api/student/${studentId}`,
+        {
+            credentials: "include"
+        }
+    );
+
+    const student = await response.json();
+
+    if (student.error) {
+        alert("API Error: " + student.error);
+        return;
+    }
+
+    document.getElementById("studentProfile").innerHTML =
+    "<h3>" + student.name + " (" + student.student_id + ")</h3>" +
+
+    "<p><strong>⭐ Success Score:</strong> " +
+    Number(student.success_score).toFixed(1) +
+    "</p>" +
+
+    "<p><strong>⚠ Risk Level:</strong> " +
+    student.overall_risk_level +
+    "</p>" +
+
+    "<p><strong>🎯 Primary Risk:</strong> " +
+    student.primary_risk_type +
+    "</p>" +
+
+    "<p><strong>📊 Student Segment:</strong> " +
+    student.student_segment +
+    "</p>" +
+
+    "<hr>" +
+
+    "<h3>🔎 Why is this student at risk?</h3>" +
+
+    "<p>" +
+    (student.risk_drivers || "No major risk drivers identified") +
+    "</p>" +
+
+    "<h3>💡 Recommended Interventions</h3>" +
+
+    "<p>" +
+    (student.intervention_recommendations ||
+        "No intervention recommendations available") +
+    "</p>";
+
+
+document.getElementById("studentModal").style.display = "block";
+
+document.body.style.overflow = "hidden";
+}
+   function closeStudentModal() {
+    document.getElementById("studentModal").style.display = "none";
+    document.body.style.overflow = "auto";
+}
+loadSummary();
+loadStudents();
+loadPlacementUnprepared();
+async function logout() {
+
+    await fetch(`${API}/api/logout`, {
+        method: "POST",
+        credentials: "include"
+    });
+
+    localStorage.removeItem("role");
+    localStorage.removeItem("student_id");
+    localStorage.removeItem("username");
+
+    window.location.href = "login.html";
+}
+</script>
+<!-- Student 360° Modal -->
+<div id="studentModal" class="student-modal">
+
+    <div class="student-modal-content">
+
+        <span class="close-modal" onclick="closeStudentModal()">&times;</span>
+
+        <h2>🎓 Student 360° Profile</h2>
+
+        <div id="studentProfile">
+            <!-- Student information will appear here -->
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
+
