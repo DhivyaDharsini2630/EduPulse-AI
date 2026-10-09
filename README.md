@@ -17,6 +17,7 @@ EduPulse AI is an AI-assisted student success and early-intervention platform fo
 - Department filtering
 - Academic Strong / Placement Unprepared identification
 - Student 360° profile with risk drivers and intervention recommendations
+- Management-only Add Student form with automatic scoring, risk classification, and student login creation
 - Server-side logout and session management
 - Production-ready Flask + Gunicorn deployment configuration
 
@@ -124,6 +125,7 @@ These credentials are for the synthetic demo only. For real deployments, use dif
 - `GET /api/health` — deployment health check
 - `GET /api/summary` — management summary
 - `GET /api/students` — management student list
+- `POST /api/students` — create a student record and login (management/admin only)
 - `GET /api/student/<student_id>` — individual student profile with access control
 - `GET /api/top-students` — top success-score students
 - `GET /api/at-risk` — medium/high-risk students
@@ -141,6 +143,8 @@ This project is prepared for Render using Gunicorn.
 - Environment variable: `SESSION_COOKIE_SECURE=1`
 
 Render can deploy this repository directly as a Python web service. The `render.yaml` file contains the service configuration.
+
+**Add Student persistence note:** the prototype writes a newly added student's data to its local CSV files and creates a student account in SQLite. Render Free uses an ephemeral filesystem, so these runtime-created records may be lost after a restart or redeployment. Use a persistent external database/storage service before relying on this for real institutional records.
 
 ## HacXLerate Round 1 submission checklist
 
